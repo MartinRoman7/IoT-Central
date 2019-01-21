@@ -6,7 +6,7 @@ var clientFromConnectionString = require('azure-iot-device-mqtt').clientFromConn
 var Message = require('azure-iot-device').Message;
 var ConnectionString = require('azure-iot-device').ConnectionString;
 
-var connectionString = 'HostName=iotc-feb92f5c-b44d-49e4-9c56-d20a39d0b651.azure-devices.net;DeviceId=a61a9e84-9ff6-476b-be08-c6d3b508d978;SharedAccessKey=eXLHqVR0T043QytrMd2z1iE3bU3VksyABEQjYshHl3Q=';
+var connectionString = '';
 var targetTemperature = 0;
 var client = clientFromConnectionString(connectionString);
 

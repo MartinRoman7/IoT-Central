@@ -6,7 +6,7 @@ var clientFromConnectionString = require('azure-iot-device-mqtt').clientFromConn
 var Message = require('azure-iot-device').Message;
 var ConnectionString = require('azure-iot-device').ConnectionString;
 
-var connectionString = 'HostName=iotc-feb92f5c-b44d-49e4-9c56-d20a39d0b651.azure-devices.net;DeviceId=a61a9e84-9ff6-476b-be08-c6d3b508d978;SharedAccessKey=eXLHqVR0T043QytrMd2z1iE3bU3VksyABEQjYshHl3Q=';
+var connectionString = '';
 var targetTemperature = 0;
 var client = clientFromConnectionString(connectionString);
 
@@ -46,10 +46,12 @@ function javascript_abort()
 function sendTelemetry(data_file) {
     //var data_file = readTextFile("file:///home/martin/Documentos/file.txt");
     console.log("Send Telemetry: "+data_file);
+    var clear_data = data_file.split(",");
+    var state_temp = clear_data[1];
     let now = new Date();
     var date_time = date.format(now, 'YYYY/MM/DD HH:mm:ss');
-    var temperature = targetTemperature + (Math.random() * 15);
-    var data = JSON.stringify({ temperature_01: temperature, temperature_02: temperature, inundacion: 'Inundación'});
+    //var temperature = targetTemperature + (Math.random() * 15);
+    var data = JSON.stringify({ temperatura_alerta : state_temp });
     var message = new Message(data);
     client.sendEvent(message, (err, res) => console.log(`Sent message: ${message.getData()}` +
       (err ? `; error: ${err.toString()}` : '') +
@@ -63,8 +65,8 @@ function sendDeviceProperties(twin) {
     var properties = {
       firmwareVersion: "9.75",
       serialNumber: "Raspberry-01",
-      sensorNumber_01: "sensorTemp_01",
-      sensorNumber_02: "sensorTemp_04"
+      sensorNumber_01: "sensorTemp 01",
+      sensorNumber_02: "sensorTemp 02"
     };
     twin.properties.reported.update(properties, (errorMessage) => 
       console.log(` * Sent device properties ` + (errorMessage ? `Error: ${errorMessage.toString()}` : `(success)`)));
@@ -126,7 +128,7 @@ function onCommandEcho(request, response) {
       console.log('Device successfully connected to Azure IoT Central');
       // Send telemetry measurements to Azure IoT Central every 1 second.
       //setInterval(sendTelemetry, 30000);
-      readTextFile("file:///home/martin/Documentos/file.txt");
+      readTextFile("file:///home/pi/Desktop/cadena-frio/data-IoT/temperatura_alerta");
       // Setup device command callbacks
       client.onDeviceMethod('echo', onCommandEcho);
       // Get device twin from Azure IoT Central.
